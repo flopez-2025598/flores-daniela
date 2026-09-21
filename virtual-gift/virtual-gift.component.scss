@@ -1,0 +1,921 @@
+// ==========================================================================
+// VIRTUAL GIFT COMPONENT - SCSS STYLES
+// Animaciones complejas en CSS, escalonamiento floral y lluvia de pétalos
+// ==========================================================================
+
+$gold-primary: #f59e0b;
+$gold-light: #fef08a;
+$gold-dark: #b45309;
+$box-base-color: #fff8f0;
+$box-accent: #fcd34d;
+$ribbon-color: linear-gradient(135deg, #ffe082 0%, #ffb300 50%, #f57f17 100%);
+$shadow-ambient: 0 20px 40px -15px rgba(217, 119, 6, 0.2);
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+// --------------------------------------------------------------------------
+// 1. ESCENARIO PRINCIPAL Y FONDO
+// --------------------------------------------------------------------------
+.virtual-gift-viewport {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: radial-gradient(ellipse at 50% 30%, #fffdf5 0%, #fef9e7 55%, #fde68a 120%);
+  overflow: hidden;
+  perspective: 1200px;
+}
+
+.svg-defs-carrier {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+// --------------------------------------------------------------------------
+// 2. LLUVIA DE PÉTALOS FLOTANTES
+// --------------------------------------------------------------------------
+.petals-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.falling-petal {
+  position: absolute;
+  top: -80px;
+  animation-name: fallAnimation;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+
+  .petal-sway {
+    width: 100%;
+    height: 100%;
+    animation-name: swayAnimation;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    will-change: transform;
+  }
+
+  .petal-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+// Pétalos de estallido al abrir la caja
+.burst-petal {
+  position: absolute;
+  top: 50%;
+  animation-name: burstFallAnimation;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+  animation-fill-mode: forwards;
+
+  .petal-sway {
+    width: 100%;
+    height: 100%;
+    animation-name: swayAnimation;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  .petal-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+@keyframes fallAnimation {
+  0% {
+    top: -80px;
+    transform: translateX(0) rotateX(0deg);
+  }
+  100% {
+    top: 105vh;
+    transform: translateX(60px) rotateX(360deg);
+  }
+}
+
+@keyframes swayAnimation {
+  0% {
+    transform: rotateZ(-25deg) rotateY(-30deg) translateX(-15px);
+  }
+  100% {
+    transform: rotateZ(35deg) rotateY(30deg) translateX(25px);
+  }
+}
+
+@keyframes burstFallAnimation {
+  0% {
+    top: 52%;
+    opacity: 0;
+    transform: translateY(0) scale(0.2) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-160px) scale(1.1) rotate(120deg);
+  }
+  100% {
+    top: 105vh;
+    opacity: 0.9;
+    transform: translateY(0) scale(0.95) rotate(480deg);
+  }
+}
+
+// --------------------------------------------------------------------------
+// 3. ESCENA DEL REGALO INTERACTIVO
+// --------------------------------------------------------------------------
+.gift-scene {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+// Indicador pulsante inicial
+.scene-header {
+  margin-bottom: 2.5rem;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  &.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+  }
+
+  .tap-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1.4rem;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(251, 191, 36, 0.5);
+    border-radius: 9999px;
+    box-shadow: 0 8px 24px -6px rgba(245, 158, 11, 0.25);
+    backdrop-filter: blur(8px);
+    animation: hintFloat 2.8s ease-in-out infinite;
+
+    .hint-sparkle {
+      font-size: 1.1rem;
+      animation: pulseSparkle 1.8s ease-in-out infinite alternate;
+    }
+
+    .hint-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #92400e;
+      letter-spacing: 0.02em;
+    }
+  }
+}
+
+@keyframes hintFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulseSparkle {
+  0% { transform: scale(0.85) rotate(-10deg); opacity: 0.7; }
+  100% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+}
+
+// Envoltorio principal de la caja y ramo
+.gift-box-wrapper {
+  position: relative;
+  width: 280px;
+  height: 250px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  margin-bottom: 2rem;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &:hover:not(.opened) {
+    transform: scale(1.04) translateY(-4px);
+
+    .gift-box {
+      animation: boxHoverWobble 1.2s ease-in-out infinite;
+    }
+  }
+
+  &:focus-visible {
+    border-radius: 20px;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.45);
+  }
+
+  &.opened {
+    cursor: default;
+  }
+}
+
+@keyframes boxHoverWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-1.5deg); }
+  75% { transform: rotate(1.5deg); }
+}
+
+// Resplandor mágico estelar interior
+.radiance-burst {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #fef08a 35%, #f59e0b 70%, transparent 100%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.gift-box-wrapper.opened .radiance-burst {
+  animation: radianceBurstAnim 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes radianceBurstAnim {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(40);
+  }
+  70% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(48);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(55);
+  }
+}
+
+// Destellos mágicos alrededor de las flores
+.sparkles-container {
+  position: absolute;
+  top: -120px;
+  left: -60px;
+  width: 400px;
+  height: 380px;
+  pointer-events: none;
+  z-index: 10;
+
+  .magic-sparkle {
+    position: absolute;
+    color: #f59e0b;
+    font-size: 1.2rem;
+    line-height: 1;
+    text-shadow: 0 0 8px rgba(254, 240, 138, 0.9);
+    animation: sparkleTwinkle 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3) rotate(90deg);
+  }
+}
+
+// --------------------------------------------------------------------------
+// 4. EL RAMO ABUNDANTE (FLORES Y HOJAS)
+// --------------------------------------------------------------------------
+.bouquet-stage {
+  position: absolute;
+  bottom: 95px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.bouquet-container {
+  position: relative;
+  width: 360px;
+  height: 340px;
+  transform: translate(-50%, -50%) translateY(70px) scale(0.2);
+  opacity: 0;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+  will-change: transform, opacity;
+}
+
+.gift-box-wrapper.opened .bouquet-container {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(-65px) scale(1);
+}
+
+.flower-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.layer-foliage { z-index: 1; }
+.layer-hydrangeas { z-index: 2; }
+.layer-peonies { z-index: 3; }
+.layer-front-accents { z-index: 4; }
+
+.flower-item {
+  position: absolute;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: 50% 90%;
+  will-change: transform, opacity;
+
+  .flower-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 4px 10px rgba(180, 83, 9, 0.2));
+  }
+}
+
+@keyframes bloomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0) translateY(50px) rotate(calc(var(--rot, 0deg) - 18deg));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.14) translateY(-10px) rotate(calc(var(--rot, 0deg) + 6deg));
+  }
+  80% {
+    transform: scale(0.96) translateY(2px) rotate(calc(var(--rot, 0deg) - 2deg));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(var(--rot, 0deg));
+  }
+}
+
+@keyframes gentleBreeze {
+  0%, 100% {
+    transform: scale(1) translateY(0) rotate(var(--rot, 0deg));
+  }
+  50% {
+    transform: scale(1.02) translateY(-4px) rotate(calc(var(--rot, 0deg) + 2deg));
+  }
+}
+
+// ANIMACIONES ESCALONADAS MEDIANTE ANIMATION-DELAY EN SCSS
+.gift-box-wrapper.opened {
+
+  // --- Capa 0: Hojas botánicas de fondo ---
+  .leaf-left-far {
+    width: 75px;
+    height: 150px;
+    left: 20px;
+    top: 50px;
+    --rot: -32deg;
+    animation: bloomIn 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s forwards,
+               gentleBreeze 4.2s ease-in-out 1.5s infinite;
+  }
+
+  .leaf-right-far {
+    width: 75px;
+    height: 150px;
+    right: 20px;
+    top: 50px;
+    --rot: 32deg;
+    animation: bloomIn 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.48s forwards,
+               gentleBreeze 4.5s ease-in-out 1.6s infinite;
+  }
+
+  .leaf-top-center {
+    width: 65px;
+    height: 140px;
+    left: 148px;
+    top: -20px;
+    --rot: 2deg;
+    animation: bloomIn 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards,
+               gentleBreeze 3.8s ease-in-out 1.7s infinite;
+  }
+
+  // --- Capa 1: Hortensias (agrupaciones de pétalos pequeños) ---
+  .hydrangea-top {
+    width: 120px;
+    height: 120px;
+    left: 120px;
+    top: 15px;
+    --rot: 4deg;
+    animation: bloomIn 1.15s cubic-bezier(0.34, 1.56, 0.64, 1) 0.75s forwards,
+               gentleBreeze 4s ease-in-out 1.9s infinite;
+  }
+
+  .hydrangea-left {
+    width: 140px;
+    height: 140px;
+    left: 15px;
+    top: 90px;
+    --rot: -16deg;
+    animation: bloomIn 1.15s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s forwards,
+               gentleBreeze 4.4s ease-in-out 2.05s infinite;
+  }
+
+  .hydrangea-right {
+    width: 140px;
+    height: 140px;
+    right: 15px;
+    top: 90px;
+    --rot: 18deg;
+    animation: bloomIn 1.15s cubic-bezier(0.34, 1.56, 0.64, 1) 1.05s forwards,
+               gentleBreeze 4.6s ease-in-out 2.2s infinite;
+  }
+
+  // --- Capa 2: Peonías (pétalos grandes y voluminosos) ---
+  .peony-left {
+    width: 155px;
+    height: 155px;
+    left: 42px;
+    top: 65px;
+    --rot: -12deg;
+    animation: bloomIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s forwards,
+               gentleBreeze 3.9s ease-in-out 2.4s infinite;
+  }
+
+  .peony-right {
+    width: 155px;
+    height: 155px;
+    right: 42px;
+    top: 65px;
+    --rot: 14deg;
+    animation: bloomIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 1.35s forwards,
+               gentleBreeze 4.1s ease-in-out 2.55s infinite;
+  }
+
+  // Peonía Gigante Central
+  .peony-center-hero {
+    width: 185px;
+    height: 185px;
+    left: 88px;
+    top: 80px;
+    --rot: 0deg;
+    animation: bloomIn 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) 1.52s forwards,
+               gentleBreeze 3.6s ease-in-out 2.8s infinite;
+  }
+
+  // --- Capa 3: Hojas de acento frontal y lazo ---
+  .leaf-front-left {
+    width: 60px;
+    height: 105px;
+    left: 60px;
+    top: 180px;
+    --rot: -42deg;
+    animation: bloomIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) 1.68s forwards;
+  }
+
+  .leaf-front-right {
+    width: 60px;
+    height: 105px;
+    right: 60px;
+    top: 180px;
+    --rot: 42deg;
+    animation: bloomIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) 1.78s forwards;
+  }
+
+  .bouquet-ribbon-tie {
+    width: 90px;
+    height: 48px;
+    left: 135px;
+    top: 240px;
+    --rot: 0deg;
+    animation: bloomIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 1.9s forwards;
+
+    .ribbon-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: drop-shadow(0 3px 6px rgba(180, 83, 9, 0.3));
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// 5. CAJA DE REGALO (ESTRUCTURA 3D, BASE, TAPA Y MOÑO)
+// --------------------------------------------------------------------------
+.gift-box {
+  position: relative;
+  width: 220px;
+  height: 170px;
+  z-index: 6;
+}
+
+.box-base {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 140px;
+  border-radius: 12px 12px 18px 18px;
+  box-shadow: 0 16px 36px -10px rgba(180, 83, 9, 0.28);
+  overflow: hidden;
+  background: #fdfaf6;
+  border: 1.5px solid rgba(251, 191, 36, 0.35);
+  transition: transform 0.4s ease;
+
+  .box-interior {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    background: linear-gradient(180deg, #d97706 0%, #b45309 60%, #78350f 100%);
+    box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .box-front {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(170deg, #ffffff 0%, #fffcf8 40%, #fef3c7 100%);
+
+    .box-ribbon-v {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 36px;
+      height: 100%;
+      transform: translateX(-50%);
+      background: $ribbon-color;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(217, 119, 6, 0.25);
+    }
+
+    .box-ribbon-h {
+      position: absolute;
+      top: 48%;
+      left: 0;
+      width: 100%;
+      height: 28px;
+      transform: translateY(-50%);
+      background: $ribbon-color;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(217, 119, 6, 0.25);
+    }
+
+    .box-seal {
+      position: absolute;
+      top: 48%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff9c4 0%, #fbbf24 65%, #b45309 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(180, 83, 9, 0.35);
+      border: 1px solid #ffe082;
+
+      .seal-icon {
+        color: #78350f;
+        font-size: 0.9rem;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+}
+
+.box-floor-shadow {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  width: 240px;
+  height: 24px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(146, 64, 14, 0.32) 0%, rgba(146, 64, 14, 0.08) 55%, transparent 75%);
+  border-radius: 50%;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  z-index: -1;
+}
+
+.box-lid {
+  position: absolute;
+  top: 15px;
+  left: -8px;
+  width: 236px;
+  height: 48px;
+  z-index: 10;
+  transform-origin: 50% 10%;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease;
+  will-change: transform, opacity;
+
+  .lid-top {
+    position: relative;
+    width: 100%;
+    height: 38px;
+    background: linear-gradient(160deg, #ffffff 0%, #fffbf2 50%, #fef3c7 100%);
+    border-radius: 10px 10px 4px 4px;
+    box-shadow: 0 6px 14px rgba(180, 83, 9, 0.2);
+    border: 1.5px solid rgba(251, 191, 36, 0.45);
+    overflow: hidden;
+
+    .lid-ribbon {
+      position: absolute;
+      background: $ribbon-color;
+
+      &.ribbon-h {
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 24px;
+        transform: translateY(-50%);
+      }
+
+      &.ribbon-v {
+        top: 0;
+        left: 50%;
+        width: 38px;
+        height: 100%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+
+  .lid-rim {
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(180deg, #fcd34d 0%, #f59e0b 100%);
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.lid-bow {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 40px;
+  z-index: 12;
+
+  .bow-knot {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 18px;
+    border-radius: 8px;
+    background: radial-gradient(circle, #fff9c4 0%, #f59e0b 60%, #b45309 100%);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+    z-index: 4;
+  }
+
+  .bow-loop {
+    position: absolute;
+    top: 6px;
+    width: 38px;
+    height: 26px;
+    border: 5px solid #fbbf24;
+    border-radius: 50% 50% 40% 40%;
+    background: linear-gradient(135deg, #ffe082 0%, #f59e0b 100%);
+    box-shadow: inset 0 0 6px rgba(180, 83, 9, 0.4), 0 3px 6px rgba(0, 0, 0, 0.15);
+
+    &.loop-left {
+      left: 6px;
+      transform: rotate(-25deg);
+      border-right: none;
+    }
+
+    &.loop-right {
+      right: 6px;
+      transform: rotate(25deg);
+      border-left: none;
+    }
+  }
+
+  .bow-ribbon {
+    position: absolute;
+    top: 22px;
+    width: 28px;
+    height: 22px;
+    background: $ribbon-color;
+    clip-path: polygon(0 0, 100% 0, 75% 100%, 0 85%);
+
+    &.ribbon-tail-left {
+      left: 12px;
+      transform: rotate(-20deg);
+    }
+
+    &.ribbon-tail-right {
+      right: 12px;
+      transform: scaleX(-1) rotate(-20deg);
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// 6. ANIMACIÓN AL ABRIR LA CAJA (OPENED STATE)
+// --------------------------------------------------------------------------
+.gift-box-wrapper.opened {
+  .box-lid {
+    transform: translateY(-170px) rotateX(45deg) rotateZ(-22deg) scale(0.85);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .box-interior {
+    opacity: 1;
+  }
+
+  .box-base {
+    animation: boxPopReaction 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .box-floor-shadow {
+    transform: translateX(-50%) scale(1.1);
+    opacity: 0.85;
+  }
+}
+
+@keyframes boxPopReaction {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.03, 0.94); }
+  65% { transform: scale(0.98, 1.02); }
+  100% { transform: scale(1, 1); }
+}
+
+// --------------------------------------------------------------------------
+// 7. TARJETA DEDICATORIA Y ACCIONES
+// --------------------------------------------------------------------------
+.dedication-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  opacity: 0;
+  transform: translateY(35px);
+  pointer-events: none;
+  transition: opacity 0.8s ease 1.6s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.6s;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .card-glass {
+    padding: 1.5rem 1.8rem;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    border-radius: 20px;
+    box-shadow: 0 16px 36px -10px rgba(180, 83, 9, 0.22);
+    backdrop-filter: blur(12px);
+    text-align: center;
+
+    .card-title {
+      margin: 0 0 0.5rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #92400e;
+      letter-spacing: -0.01em;
+    }
+
+    .card-message {
+      margin: 0 0 1.25rem;
+      font-size: 0.96rem;
+      line-height: 1.55;
+      color: #78350f;
+      font-style: italic;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: center;
+
+      .btn-replay {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: #78350f;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 9999px;
+        box-shadow: 0 6px 14px -4px rgba(217, 119, 6, 0.35);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+        .btn-icon {
+          font-size: 1.1rem;
+          line-height: 1;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 18px -4px rgba(217, 119, 6, 0.45);
+          background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
+
+          .btn-icon {
+            transform: rotate(-180deg);
+          }
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 4px 10px -2px rgba(217, 119, 6, 0.3);
+        }
+
+        &:focus-visible {
+          outline: 2px solid #b45309;
+          outline-offset: 2px;
+        }
+      }
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// 8. RESPONSIVIDAD (MOBILE OPTIMIZATION)
+// --------------------------------------------------------------------------
+@media (max-width: 480px) {
+  .gift-box-wrapper {
+    width: 240px;
+    height: 220px;
+  }
+
+  .gift-box {
+    width: 190px;
+    height: 150px;
+  }
+
+  .box-lid {
+    width: 204px;
+    height: 42px;
+    left: -7px;
+  }
+
+  .bouquet-container {
+    width: 300px;
+    height: 290px;
+  }
+
+  .peony-center-hero {
+    width: 150px !important;
+    height: 150px !important;
+    left: 75px !important;
+  }
+
+  .peony-left, .peony-right {
+    width: 130px !important;
+    height: 130px !important;
+  }
+
+  .dedication-card {
+    padding: 0 0.5rem;
+  }
+}
