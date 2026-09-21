@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  background: #0b1530;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  overscroll-behavior-y: none;
+}

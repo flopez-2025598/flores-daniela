@@ -1,25 +1,61 @@
-# Componente VirtualGiftComponent (Regalo Virtual - Flores Amarillas)
+# Flores Daniela — Regalo Virtual
 
-Este componente standalone en Angular proporciona una experiencia inmersiva e interactiva de 'Regalo Virtual'. Al hacer clic sobre una caja de regalo con diseño 3D, se ejecutan animaciones CSS fluidas que retiran la tapa, liberan un resplandor dorado y revelan un ramo abundante compuesto por peonías amarillas de pétalos voluminosos, hortensias en racimos detallados y hojas botánicas verdes, todo acompañado de una suave lluvia de pétalos dorados en el fondo.
+Proyecto Angular standalone (Angular 22, con signals) que muestra una experiencia
+móvil de "regalo virtual": una escena nocturna con luna, jardín de peonías y
+hortensias amarillas, y una caja de regalo que al abrirse revela una carta.
 
-## Estructura de Archivos
+## Estructura
 
-- [virtual-gift.component.ts](file:///home/fares/Escritorio/FloresDaniela/src/app/components/virtual-gift/virtual-gift.component.ts): Lógica del componente standalone, generación estocástica de pétalos de fondo y ráfaga, y síntesis de audio armónico sutil con Web Audio API.
-- [virtual-gift.component.html](file:///home/fares/Escritorio/FloresDaniela/src/app/components/virtual-gift/virtual-gift.component.html): Estructura visual con SVG puros inline (sin dependencias externas de imágenes) para peonías, hortensias, follaje verde y la caja de regalo.
-- [virtual-gift.component.scss](file:///home/fares/Escritorio/FloresDaniela/src/app/components/virtual-gift/virtual-gift.component.scss): Animaciones complejas (`@keyframes`), transformaciones 3D, `animation-delay` escalonado para la eclosión de cada flor y la lluvia flotante de pétalos.
+- [angular.json](angular.json), [package.json](package.json), [tsconfig.json](tsconfig.json): configuración del proyecto Angular CLI.
+- [src/index.html](src/index.html): plantilla HTML de la app (meta viewport, fuentes, `base href`).
+- [src/main.ts](src/main.ts) y [src/app/app.config.ts](src/app/app.config.ts): arranque de la aplicación standalone.
+- [src/app/app.ts](src/app/app.ts): componente raíz, solo renderiza `<app-virtual-gift />`.
+- [src/app/components/virtual-gift/](src/app/components/virtual-gift/): el componente real de la experiencia
+  (`virtual-gift.component.ts`, `.html`, `.scss`). **Este es el único componente que se usa** — cualquier otra
+  copia suelta en el repo quedó eliminada para evitar confusiones.
+- `index.html`, `main-*.js`, `styles-*.css`, `favicon.ico` en la raíz: **build de producción ya generado**,
+  que es lo que sirve GitHub Pages directamente desde la rama `main`. No se edita a mano.
 
-## Cómo Utilizar en tu Aplicación
+## Cómo editar el mensaje de la carta
 
-1. En cualquier componente padre o ruta:
-```typescript
-import { Component } from '@angular/core';
-import { VirtualGiftComponent } from './components/virtual-gift/virtual-gift.component';
+Abre [src/app/components/virtual-gift/virtual-gift.component.ts](src/app/components/virtual-gift/virtual-gift.component.ts)
+y busca la sección `CONTENIDO DE LA CARTA`:
 
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [VirtualGiftComponent],
-  template: `<app-virtual-gift></app-virtual-gift>`
-})
-export class AppComponent {}
+```ts
+readonly recipientName = 'Daniela';
+readonly letterTitle = 'Para ti, Daniela';
+readonly letterParagraphs: readonly string[] = [
+  'Primer párrafo...',
+  'Segundo párrafo...',
+  'Tercer párrafo...',
+];
+readonly letterSignature = 'Con mucho cariño, Fares';
 ```
+
+Edita esos valores (agrega o quita párrafos en el array `letterParagraphs` libremente) y vuelve a compilar
+(ver abajo). No hace falta tocar el HTML ni el SCSS para cambiar el texto.
+
+## Desarrollo local
+
+```bash
+npm install       # primera vez
+npm start         # equivale a: ng serve  → http://localhost:4200
+```
+
+## Compilar y publicar en GitHub Pages
+
+El sitio se sirve directamente desde los archivos en la **raíz** del repositorio (no hay Actions ni rama
+`gh-pages`), así que después de cualquier cambio hay que regenerar esos archivos:
+
+```bash
+rm -rf dist
+npx ng build --configuration production --base-href /flores-daniela/
+cp dist/flores-daniela/browser/index.html ./index.html
+cp dist/flores-daniela/browser/main-*.js ./
+cp dist/flores-daniela/browser/styles-*.css ./
+cp dist/flores-daniela/browser/favicon.ico ./favicon.ico
+```
+
+Borra a mano cualquier `main-*.js` / `styles-*.css` viejo que haya quedado de una build anterior antes de
+copiar los nuevos (los nombres cambian porque llevan un hash de contenido), luego revisa `git status` y
+comitea todo junto (fuente + build).
