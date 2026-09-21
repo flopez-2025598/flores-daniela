@@ -206,37 +206,48 @@
   position: relative;
   z-index: 5;
   margin-top: auto;
-  height: 34dvh;
-  min-height: 230px;
+  height: 46dvh;
+  min-height: 300px;
+  overflow: visible;
 }
 
 .flower-bed {
   position: absolute;
   inset: auto 0 0;
   height: 100%;
+  overflow: visible;
   pointer-events: none;
 }
 .back-layer { z-index: 1; }
 .front-layer { z-index: 30; }
 
+// Pocas flores, GRANDES y muy detalladas — como un ramo fotografiado de cerca,
+// con mucho solape entre ellas (igual que la referencia).
 .flower {
   position: absolute;
-  bottom: 15%;
-  width: 30%;
-  max-width: 144px;
+  bottom: 4%;
+  width: 58%;
+  max-width: 300px;
   aspect-ratio: 1;
   overflow: visible;
   transform: translateX(-50%) scale(var(--scale)) rotate(var(--rotate));
-  transform-origin: 50% 96%;
-  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.35));
+  transform-origin: 50% 94%;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.4));
   will-change: transform;
   animation-name: sway;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
-.flower.hydrangea { bottom: -8%; width: 32%; max-width: 156px; }
-.flower.peony-bud { bottom: 15%; width: 19%; max-width: 92px; }
+.flower.hydrangea { bottom: -6%; width: 44%; max-width: 230px; }
+.flower.peony-open { bottom: 20%; width: 48%; max-width: 240px; }
+.flower.peony-bud { bottom: 14%; width: 28%; max-width: 140px; }
+.flower.leaf {
+  bottom: -4%;
+  width: 30%;
+  max-width: 150px;
+  aspect-ratio: 120 / 200;
+}
 
 @keyframes sway {
   from { transform: translateX(-50%) scale(var(--scale)) rotate(calc(var(--rotate) - 2.5deg)); }
@@ -271,7 +282,7 @@
 .gift-wrap {
   position: absolute;
   left: 50%;
-  bottom: 6%;
+  bottom: 30%;
   z-index: 15;
   width: 55%;
   max-width: 230px;

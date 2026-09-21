@@ -13,7 +13,7 @@ import {
 /** Secuencia completa de la experiencia, de la escena inicial a la carta expandida. */
 export type GiftState = 'idle' | 'rising' | 'ready' | 'opening' | 'letter' | 'expanded';
 
-type FlowerKind = 'hydrangea' | 'peonyOpen' | 'peonyBud';
+type FlowerKind = 'hydrangea' | 'peonyOpen' | 'peonyBud' | 'leaf';
 type FlowerLayer = 'back' | 'front';
 
 interface Star {
@@ -82,6 +82,41 @@ function pick<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+/**
+ * Genera las posiciones de las florecitas de una hortensia en anillos concéntricos
+ * (mophead denso), devolviendo [x, y, rotación] dentro de un viewBox 0 0 200 200.
+ */
+function buildHydrangeaFlorets(): ReadonlyArray<readonly [number, number, number]> {
+  const center = 100;
+  const rings: Array<{ radius: number; count: number; angleOffset: number }> = [
+    { radius: 0, count: 1, angleOffset: 0 },
+    { radius: 24, count: 6, angleOffset: 0 },
+    { radius: 46, count: 11, angleOffset: 14 },
+    { radius: 67, count: 16, angleOffset: 5 }
+  ];
+
+  const florets: Array<[number, number, number]> = [];
+  for (const ring of rings) {
+    if (ring.radius === 0) {
+      florets.push([center, center, 0]);
+      continue;
+    }
+    for (let i = 0; i < ring.count; i++) {
+      const angleDeg = ring.angleOffset + (360 / ring.count) * i;
+      const angleRad = (angleDeg * Math.PI) / 180;
+      const x = Math.round((center + ring.radius * Math.cos(angleRad)) * 10) / 10;
+      const y = Math.round((center + ring.radius * Math.sin(angleRad)) * 10) / 10;
+      florets.push([x, y, Math.round(angleDeg)]);
+    }
+  }
+  return florets;
+}
+
+/** Ángulos (deg) igualmente espaciados para un anillo de pétalos de peonía. */
+function buildPetalRing(count: number, angleOffset: number): readonly number[] {
+  return Array.from({ length: count }, (_, i) => angleOffset + (360 / count) * i);
+}
+
 @Component({
   selector: 'app-virtual-gift',
   standalone: true,
@@ -137,17 +172,11 @@ export class VirtualGiftComponent implements OnInit {
   readonly letterSignature = 'Con mucho cariño, Fares';
 
   /** Posiciones [x, y, rotación] de las florecitas de 4 pétalos dentro del símbolo #flowerHydrangea. */
-  readonly hydrangeaFlorets: ReadonlyArray<readonly [number, number, number]> = [
-    [60, 60, 0],
-    [38, 42, 18],
-    [82, 42, -18],
-    [30, 70, -12],
-    [90, 70, 12],
-    [46, 88, 6],
-    [74, 88, -6],
-    [60, 34, 30],
-    [60, 96, -24]
-  ];
+  readonly hydrangeaFlorets = buildHydrangeaFlorets();
+
+  /** Anillos de pétalos de la peonía abierta: exterior grande + interior más chico. */
+  readonly peonyOuterPetals = buildPetalRing(11, 3);
+  readonly peonyInnerPetals = buildPetalRing(9, 20);
 
   constructor() {
     // Bloquea el scroll del body mientras el modal está abierto.
@@ -300,41 +329,51 @@ export class VirtualGiftComponent implements OnInit {
   }
 
   private makeGarden(): GardenFlower[] {
-    // Disposición tupida a mano: hortensias grandes adelante, peonías asomando detrás,
-    // sin huecos de borde a borde. Layer 'front' se dibuja después de la caja
-    // en el DOM para que tape su base.
-    const layout: Array<[FlowerKind, number, FlowerLayer]> = [
-      ['peonyBud', 1, 'back'],
-      ['hydrangea', 6, 'front'],
-      ['peonyOpen', 13, 'back'],
-      ['hydrangea', 19, 'front'],
-      ['peonyBud', 26, 'back'],
-      ['hydrangea', 32, 'front'],
-      ['peonyOpen', 39, 'back'],
-      ['hydrangea', 45, 'front'],
-      ['peonyOpen', 50, 'back'],
-      ['hydrangea', 55, 'front'],
-      ['peonyBud', 61, 'back'],
-      ['hydrangea', 68, 'front'],
-      ['peonyOpen', 74, 'back'],
-      ['hydrangea', 81, 'front'],
-      ['peonyBud', 87, 'back'],
-      ['hydrangea', 93, 'front'],
-      ['peonyOpen', 99, 'back']
+    // Composición a mano — pocas flores pero GRANDES y muy detalladas, como un
+    // ramo fotografiado de cerca: hortensias tupidas abajo, peonías grandes
+    // asomando detrás/arriba, y hojas oscuras entre medio. 'front' se dibuja
+    // después de la caja en el DOM para que las hortensias tapen su base.
+    const layout: Array<[FlowerKind, number, FlowerLayer, number]> = [
+      // kind         x%   layer    baseScale
+      ['leaf', 0, 'back', 1.3],
+      ['hydrangea', 6, 'front', 1.55],
+      ['peonyOpen', 18, 'back', 1.55],
+      ['hydrangea', 30, 'front', 1.35],
+      ['peonyBud', 42, 'back', 0.95],
+      ['peonyOpen', 50, 'back', 1.75],
+      ['leaf', 58, 'back', 1.15],
+      ['hydrangea', 66, 'front', 1.4],
+      ['peonyOpen', 80, 'back', 1.6],
+      ['hydrangea', 92, 'front', 1.5],
+      ['leaf', 98, 'back', 1.35]
     ];
 
-    return layout.map(([kind, xPct, layer], i) => ({
+    return layout.map(([kind, xPct, layer, baseScale], i) => ({
       id: nextId(),
       kind,
       xPct,
       layer,
-      scale: rand(0.82, 1.22),
-      rotate: rand(-7, 7),
+      scale: baseScale * rand(0.94, 1.06),
+      rotate: rand(-6, 6),
       delay: rand(0, 2.4),
       duration: rand(4.5, 7.5),
       tone: pick([0, 1, 2] as const),
       z: layer === 'front' ? 20 + i : i
     }));
+  }
+
+  /** Id del `<symbol>` SVG y el viewBox que le corresponde a cada tipo de elemento del jardín. */
+  symbolId(kind: FlowerKind): string {
+    switch (kind) {
+      case 'hydrangea': return '#flowerHydrangea';
+      case 'peonyOpen': return '#flowerPeonyOpen';
+      case 'peonyBud': return '#flowerPeonyBud';
+      case 'leaf': return '#leafBlade';
+    }
+  }
+
+  viewBoxFor(kind: FlowerKind): string {
+    return kind === 'leaf' ? '0 0 120 200' : '0 0 200 200';
   }
 
   // ---------------------------------------------------------------------

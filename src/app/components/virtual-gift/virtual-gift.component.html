@@ -8,79 +8,116 @@
         <stop offset="100%" stop-color="#e7cf8f" />
       </radialGradient>
 
-      <linearGradient id="petalHydrangeaA" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#fff3b0" />
+      <radialGradient id="petalHydrangeaA" cx="35%" cy="28%" r="80%">
+        <stop offset="0%" stop-color="#fff6c8" />
         <stop offset="55%" stop-color="#f5c842" />
-        <stop offset="100%" stop-color="#c98e18" />
-      </linearGradient>
-      <linearGradient id="petalHydrangeaB" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#fff7c9" />
-        <stop offset="55%" stop-color="#f9d95c" />
-        <stop offset="100%" stop-color="#d9a422" />
-      </linearGradient>
-      <linearGradient id="petalHydrangeaC" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#ffe98f" />
-        <stop offset="55%" stop-color="#e8b42a" />
-        <stop offset="100%" stop-color="#a86e10" />
-      </linearGradient>
-
-      <radialGradient id="petalPeony" cx="40%" cy="30%" r="80%">
-        <stop offset="0%" stop-color="#fff6cf" />
-        <stop offset="55%" stop-color="#f7cf4d" />
-        <stop offset="100%" stop-color="#c68a16" />
+        <stop offset="100%" stop-color="#b87c14" />
       </radialGradient>
-      <radialGradient id="peonyHeart" cx="50%" cy="45%" r="60%">
+      <radialGradient id="petalHydrangeaB" cx="35%" cy="28%" r="80%">
+        <stop offset="0%" stop-color="#fffbe0" />
+        <stop offset="55%" stop-color="#f9d95c" />
+        <stop offset="100%" stop-color="#c8931c" />
+      </radialGradient>
+      <radialGradient id="petalHydrangeaC" cx="35%" cy="28%" r="80%">
+        <stop offset="0%" stop-color="#ffefa8" />
+        <stop offset="55%" stop-color="#e8b42a" />
+        <stop offset="100%" stop-color="#95620e" />
+      </radialGradient>
+
+      <radialGradient id="petalPeonyLight" cx="38%" cy="22%" r="85%">
+        <stop offset="0%" stop-color="#fffae0" />
+        <stop offset="50%" stop-color="#fbe08a" />
+        <stop offset="100%" stop-color="#c9871a" />
+      </radialGradient>
+      <radialGradient id="petalPeonyMid" cx="38%" cy="22%" r="85%">
+        <stop offset="0%" stop-color="#fff3c0" />
+        <stop offset="50%" stop-color="#f5c842" />
+        <stop offset="100%" stop-color="#a86710" />
+      </radialGradient>
+      <radialGradient id="petalPeonyDeep" cx="38%" cy="22%" r="85%">
+        <stop offset="0%" stop-color="#ffeca0" />
+        <stop offset="50%" stop-color="#e0a41e" />
+        <stop offset="100%" stop-color="#7c4e08" />
+      </radialGradient>
+      <radialGradient id="peonyHeart" cx="50%" cy="42%" r="65%">
         <stop offset="0%" stop-color="#fff7c6" />
         <stop offset="70%" stop-color="#e8a923" />
-        <stop offset="100%" stop-color="#8a5a0d" />
+        <stop offset="100%" stop-color="#7c4e08" />
       </radialGradient>
-      <linearGradient id="leafGrad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#3f7a3a" />
-        <stop offset="100%" stop-color="#2f5a2e" />
+
+      <linearGradient id="leafGradA" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#4a8a44" />
+        <stop offset="100%" stop-color="#234a22" />
+      </linearGradient>
+      <linearGradient id="leafGradB" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#3a6e37" />
+        <stop offset="100%" stop-color="#17331a" />
       </linearGradient>
 
-      <!-- Hortensia: racimo de florecitas de 4 pétalos -->
-      <symbol id="flowerHydrangea" viewBox="0 0 120 120">
+      <!-- Hortensia: racimo denso de ~34 florecitas de 4 pétalos en anillos concéntricos -->
+      <symbol id="flowerHydrangea" viewBox="0 0 200 200">
         @for (pos of hydrangeaFlorets; track $index) {
           <g [attr.transform]="'translate(' + pos[0] + ',' + pos[1] + ') rotate(' + pos[2] + ')'">
-            <path d="M0 -14C7 -14 11 -7 6 0C11 7 7 14 0 14C-7 14 -11 7 -6 0C-11 -7 -7 -14 0 -14Z"
-                  [attr.fill]="'url(#petalHydrangea' + (['A','B','C'][$index % 3]) + ')'"
-                  stroke="#a8730f" stroke-opacity=".25" stroke-width="0.8" />
-            <circle r="2.4" fill="#8a5a0d" />
+            <g [attr.fill]="'url(#petalHydrangea' + (['A','B','C'][$index % 3]) + ')'"
+               stroke="#8a5a0d" stroke-opacity=".3" stroke-width="0.6">
+              <ellipse cx="0" cy="-8" rx="6.3" ry="8.4" />
+              <ellipse cx="0" cy="8" rx="6.3" ry="8.4" />
+              <ellipse cx="-8" cy="0" rx="8.4" ry="6.3" />
+              <ellipse cx="8" cy="0" rx="8.4" ry="6.3" />
+            </g>
+            <circle r="2.6" fill="#7c4e08" opacity=".85" />
           </g>
         }
       </symbol>
 
-      <!-- Peonía abierta: múltiples capas de pétalos curvos -->
-      <symbol id="flowerPeonyOpen" viewBox="0 0 120 120">
-        <g stroke="#b5730d" stroke-opacity=".22" stroke-width="1">
-          <path fill="url(#petalPeony)" d="M60 12C83 -2 108 16 103 43c-4 20-26 34-43 44C43 74 20 61 16 40 12 16 39 2 60 12Z" />
-          <path fill="url(#petalPeony)" opacity=".95" d="M23 30C27 5 57 6 67 28c9 18-1 41-15 53C31 68 16 50 23 30Z" />
-          <path fill="url(#petalPeony)" opacity=".95" d="M97 30c-4-25-34-24-44-2-9 18 1 41 15 53 20-13 34-31 29-51Z" />
-          <path fill="url(#petalPeony)" opacity=".9" d="M16 55c-4-23 19-40 40-30 18 10 24 33 15 51-21 3-50 0-55-21Z" />
-          <path fill="url(#petalPeony)" opacity=".9" d="M104 55c4-23-19-40-40-30-18 10-24 33-15 51 21 3 50 0 55-21Z" />
-          <path fill="url(#petalPeony)" opacity=".85" d="M33 79c-12-19 5-39 26-36 20 2 32 22 24 40-17 14-39 13-50-4Z" />
-          <path fill="url(#petalPeony)" opacity=".85" d="M87 80c11-18-4-38-24-37-20 2-32 21-24 40 17 14 38 13 48-3Z" />
-        </g>
-        <ellipse cx="60" cy="66" rx="16" ry="15" fill="url(#peonyHeart)" />
-        <g fill="#fff7c6">
-          <circle cx="53" cy="62" r="2.6" />
-          <circle cx="64" cy="59" r="2.3" />
-          <circle cx="69" cy="69" r="2.2" />
-          <circle cx="57" cy="73" r="2" />
-          <circle cx="66" cy="74" r="1.8" />
+      <!-- Peonía abierta: anillo exterior + interior de pétalos redondeados y mullidos,
+           con una base sólida detrás para que no se vean huecos entre pétalos. -->
+      <symbol id="flowerPeonyOpen" viewBox="0 0 200 200">
+        <g transform="translate(100,100)">
+          <circle r="78" fill="url(#petalPeonyMid)" opacity=".9" />
+
+          @for (angle of peonyOuterPetals; track $index) {
+            <path [attr.transform]="'rotate(' + angle + ') scale(' + (0.94 + (($index % 3) * 0.05)) + ')'"
+                  [attr.fill]="'url(#petalPeony' + (['Light','Mid','Deep'][$index % 3]) + ')'"
+                  stroke="#a5690e" stroke-opacity=".2" stroke-width="1"
+                  d="M0,4 C30,-8 36,-42 28,-68 C24,-86 -24,-86 -28,-68 C-36,-42 -30,-8 0,4 Z" />
+          }
+          @for (angle of peonyInnerPetals; track $index) {
+            <path [attr.transform]="'rotate(' + angle + ') scale(' + (0.9 + (($index % 3) * 0.05)) + ')'"
+                  [attr.fill]="'url(#petalPeony' + (['Mid','Deep','Light'][$index % 3]) + ')'"
+                  stroke="#a5690e" stroke-opacity=".25" stroke-width="1"
+                  d="M0,4 C20,-6 24,-30 18,-48 C15,-60 -15,-60 -18,-48 C-24,-30 -20,-6 0,4 Z" />
+          }
+
+          <circle r="19" fill="url(#peonyHeart)" />
+          @for (angle of peonyInnerPetals; track $index) {
+            <line [attr.transform]="'rotate(' + (angle * 1.3) + ')'"
+                  x1="0" y1="-8" x2="0" y2="-19"
+                  stroke="#fff2b0" stroke-width="1.8" stroke-linecap="round" opacity=".9" />
+          }
         </g>
       </symbol>
 
-      <!-- Peonía en capullo: forma cerrada, ligeras costuras de pétalo -->
-      <symbol id="flowerPeonyBud" viewBox="0 0 120 120">
-        <path fill="url(#petalPeony)" stroke="#b5730d" stroke-opacity=".25" stroke-width="1"
-              d="M60 20C78 20 90 40 86 62C83 82 72 96 60 100C48 96 37 82 34 62C30 40 42 20 60 20Z" />
-        <path d="M60 22C63 45 63 78 60 99" fill="none" stroke="#c68a16" stroke-opacity=".4" stroke-width="1.4" />
-        <path d="M42 34C48 55 50 82 55 98" fill="none" stroke="#c68a16" stroke-opacity=".3" stroke-width="1.2" />
-        <path d="M78 34C72 55 70 82 65 98" fill="none" stroke="#c68a16" stroke-opacity=".3" stroke-width="1.2" />
-        <path fill="url(#leafGrad)" d="M60 96C50 92 44 100 46 112C54 110 60 104 60 96Z" />
-        <path fill="url(#leafGrad)" d="M60 96C70 92 76 100 74 112C66 110 60 104 60 96Z" />
+      <!-- Peonía en capullo: forma cerrada con costuras de pétalo y sépalos -->
+      <symbol id="flowerPeonyBud" viewBox="0 0 200 200">
+        <path fill="url(#petalPeonyMid)" stroke="#a5690e" stroke-opacity=".3" stroke-width="1.4"
+              d="M100 30C130 30 150 62 144 96C140 128 122 152 100 160C78 152 60 128 56 96C50 62 70 30 100 30Z" />
+        <path d="M100 34C100 70 100 128 100 158" fill="none" stroke="#c68a16" stroke-opacity=".4" stroke-width="2" />
+        <path d="M74 52C82 84 86 128 92 156" fill="none" stroke="#c68a16" stroke-opacity=".3" stroke-width="1.6" />
+        <path d="M126 52C118 84 114 128 108 156" fill="none" stroke="#c68a16" stroke-opacity=".3" stroke-width="1.6" />
+        <path fill="url(#leafGradA)" d="M100 154C84 148 74 162 78 182C90 178 100 168 100 154Z" />
+        <path fill="url(#leafGradB)" d="M100 154C116 148 126 162 122 182C110 178 100 168 100 154Z" />
+      </symbol>
+
+      <!-- Hoja: silueta puntiaguda con nervadura central y venas laterales -->
+      <symbol id="leafBlade" viewBox="0 0 120 200">
+        <path fill="url(#leafGradA)" stroke="#16301a" stroke-opacity=".3" stroke-width="1.5"
+              d="M60 8C92 40 104 90 82 138C70 164 60 188 60 196C60 188 50 164 38 138C16 90 28 40 60 8Z" />
+        <path d="M60 20C60 66 60 140 60 190" fill="none" stroke="#16301a" stroke-opacity=".4" stroke-width="2" />
+        <path d="M60 55C46 72 38 86 32 100" fill="none" stroke="#16301a" stroke-opacity=".3" stroke-width="1.4" />
+        <path d="M60 55C74 72 82 86 88 100" fill="none" stroke="#16301a" stroke-opacity=".3" stroke-width="1.4" />
+        <path d="M60 90C48 106 42 118 38 130" fill="none" stroke="#16301a" stroke-opacity=".25" stroke-width="1.2" />
+        <path d="M60 90C72 106 78 118 82 130" fill="none" stroke="#16301a" stroke-opacity=".25" stroke-width="1.2" />
       </symbol>
     </defs>
   </svg>
@@ -146,15 +183,16 @@
           [class.hydrangea]="f.kind === 'hydrangea'"
           [class.peony-open]="f.kind === 'peonyOpen'"
           [class.peony-bud]="f.kind === 'peonyBud'"
+          [class.leaf]="f.kind === 'leaf'"
           [style.left.%]="f.xPct"
           [style.--scale]="f.scale"
           [style.--rotate.deg]="f.rotate"
           [style.animation-delay.s]="f.delay"
           [style.animation-duration.s]="f.duration"
           [style.z-index]="f.z"
-          viewBox="0 0 120 120"
+          [attr.viewBox]="viewBoxFor(f.kind)"
         >
-          <use [attr.href]="'#flower' + (f.kind === 'hydrangea' ? 'Hydrangea' : f.kind === 'peonyOpen' ? 'PeonyOpen' : 'PeonyBud')" />
+          <use [attr.href]="symbolId(f.kind)" />
         </svg>
       }
     </div>
@@ -211,15 +249,16 @@
           [class.hydrangea]="f.kind === 'hydrangea'"
           [class.peony-open]="f.kind === 'peonyOpen'"
           [class.peony-bud]="f.kind === 'peonyBud'"
+          [class.leaf]="f.kind === 'leaf'"
           [style.left.%]="f.xPct"
           [style.--scale]="f.scale"
           [style.--rotate.deg]="f.rotate"
           [style.animation-delay.s]="f.delay"
           [style.animation-duration.s]="f.duration"
           [style.z-index]="f.z"
-          viewBox="0 0 120 120"
+          [attr.viewBox]="viewBoxFor(f.kind)"
         >
-          <use [attr.href]="'#flower' + (f.kind === 'hydrangea' ? 'Hydrangea' : f.kind === 'peonyOpen' ? 'PeonyOpen' : 'PeonyBud')" />
+          <use [attr.href]="symbolId(f.kind)" />
         </svg>
       }
     </div>
