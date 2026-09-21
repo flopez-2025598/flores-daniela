@@ -329,23 +329,24 @@ export class VirtualGiftComponent implements OnInit {
   }
 
   private makeGarden(): GardenFlower[] {
-    // Composición a mano — pocas flores pero GRANDES y muy detalladas, como un
-    // ramo fotografiado de cerca: hortensias tupidas abajo, peonías grandes
-    // asomando detrás/arriba, y hojas oscuras entre medio. 'front' se dibuja
-    // después de la caja en el DOM para que las hortensias tapen su base.
+    // Composición a mano — plantas GRANDES con tallo y hojas propias, bien
+    // separadas entre sí (no una alfombra apretada), como un jardín visto de
+    // cerca. Las hortensias 'front' quedan cerca de los bordes para que solo
+    // rocen el costado de la caja de regalo, no su centro; las peonías van en
+    // 'back' (detrás de la caja) para enmarcarla sin taparla.
     const layout: Array<[FlowerKind, number, FlowerLayer, number]> = [
       // kind         x%   layer    baseScale
-      ['leaf', 0, 'back', 1.3],
-      ['hydrangea', 6, 'front', 1.55],
-      ['peonyOpen', 18, 'back', 1.55],
-      ['hydrangea', 30, 'front', 1.35],
-      ['peonyBud', 42, 'back', 0.95],
-      ['peonyOpen', 50, 'back', 1.75],
-      ['leaf', 58, 'back', 1.15],
-      ['hydrangea', 66, 'front', 1.4],
-      ['peonyOpen', 80, 'back', 1.6],
-      ['hydrangea', 92, 'front', 1.5],
-      ['leaf', 98, 'back', 1.35]
+      ['leaf', 1, 'back', 1.1],
+      ['hydrangea', 10, 'front', 1.3],
+      ['peonyOpen', 21, 'back', 1.4],
+      ['leaf', 33, 'back', 0.9],
+      ['peonyBud', 40, 'back', 0.85],
+      ['peonyOpen', 50, 'back', 1.55],
+      ['peonyBud', 60, 'back', 0.85],
+      ['leaf', 68, 'back', 0.9],
+      ['peonyOpen', 79, 'back', 1.4],
+      ['hydrangea', 90, 'front', 1.3],
+      ['leaf', 99, 'back', 1.1]
     ];
 
     return layout.map(([kind, xPct, layer, baseScale], i) => ({
@@ -373,7 +374,7 @@ export class VirtualGiftComponent implements OnInit {
   }
 
   viewBoxFor(kind: FlowerKind): string {
-    return kind === 'leaf' ? '0 0 120 200' : '0 0 200 200';
+    return kind === 'leaf' ? '0 0 120 280' : '0 0 200 340';
   }
 
   // ---------------------------------------------------------------------

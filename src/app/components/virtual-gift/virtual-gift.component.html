@@ -54,26 +54,41 @@
         <stop offset="100%" stop-color="#17331a" />
       </linearGradient>
 
-      <!-- Hortensia: racimo denso de ~34 florecitas de 4 pétalos en anillos concéntricos -->
-      <symbol id="flowerHydrangea" viewBox="0 0 200 200">
-        @for (pos of hydrangeaFlorets; track $index) {
-          <g [attr.transform]="'translate(' + pos[0] + ',' + pos[1] + ') rotate(' + pos[2] + ')'">
-            <g [attr.fill]="'url(#petalHydrangea' + (['A','B','C'][$index % 3]) + ')'"
-               stroke="#8a5a0d" stroke-opacity=".3" stroke-width="0.6">
-              <ellipse cx="0" cy="-8" rx="6.3" ry="8.4" />
-              <ellipse cx="0" cy="8" rx="6.3" ry="8.4" />
-              <ellipse cx="-8" cy="0" rx="8.4" ry="6.3" />
-              <ellipse cx="8" cy="0" rx="8.4" ry="6.3" />
+      <!-- Hortensia: racimo denso de ~34 florecitas de 4 pétalos, con tallo y hojas propias
+           para que se vea como una planta independiente y no como una alfombra sin estructura. -->
+      <symbol id="flowerHydrangea" viewBox="0 0 200 340">
+        <path d="M100 175C94 215 106 265 100 335" fill="none" stroke="#2f5a2e" stroke-width="7" stroke-linecap="round" />
+        <g transform="translate(100,222) rotate(-38)"><path fill="url(#leafGradA)" d="M0,0 C20,-8 30,-28 16,-46 C6,-32 -4,-14 0,0 Z" /></g>
+        <g transform="translate(100,222) rotate(38) scale(-1,1)"><path fill="url(#leafGradB)" d="M0,0 C20,-8 30,-28 16,-46 C6,-32 -4,-14 0,0 Z" /></g>
+        <g transform="translate(100,282) rotate(-26)"><path fill="url(#leafGradB)" d="M0,0 C16,-6 24,-22 13,-36 C5,-25 -3,-11 0,0 Z" /></g>
+        <g transform="translate(100,282) rotate(26) scale(-1,1)"><path fill="url(#leafGradA)" d="M0,0 C16,-6 24,-22 13,-36 C5,-25 -3,-11 0,0 Z" /></g>
+
+        <g transform="translate(0,25)">
+          @for (pos of hydrangeaFlorets; track $index) {
+            <g [attr.transform]="'translate(' + pos[0] + ',' + pos[1] + ') rotate(' + pos[2] + ')'">
+              <g [attr.fill]="'url(#petalHydrangea' + (['A','B','C'][$index % 3]) + ')'"
+                 stroke="#8a5a0d" stroke-opacity=".3" stroke-width="0.6">
+                <ellipse cx="0" cy="-8" rx="6.3" ry="8.4" />
+                <ellipse cx="0" cy="8" rx="6.3" ry="8.4" />
+                <ellipse cx="-8" cy="0" rx="8.4" ry="6.3" />
+                <ellipse cx="8" cy="0" rx="8.4" ry="6.3" />
+              </g>
+              <circle r="2.6" fill="#7c4e08" opacity=".85" />
             </g>
-            <circle r="2.6" fill="#7c4e08" opacity=".85" />
-          </g>
-        }
+          }
+        </g>
       </symbol>
 
       <!-- Peonía abierta: anillo exterior + interior de pétalos redondeados y mullidos,
-           con una base sólida detrás para que no se vean huecos entre pétalos. -->
-      <symbol id="flowerPeonyOpen" viewBox="0 0 200 200">
-        <g transform="translate(100,100)">
+           con una base sólida detrás para que no se vean huecos entre pétalos, y tallo propio. -->
+      <symbol id="flowerPeonyOpen" viewBox="0 0 200 340">
+        <path d="M100 195C93 235 107 280 100 335" fill="none" stroke="#2f5a2e" stroke-width="7" stroke-linecap="round" />
+        <g transform="translate(100,238) rotate(-38)"><path fill="url(#leafGradA)" d="M0,0 C20,-8 30,-28 16,-46 C6,-32 -4,-14 0,0 Z" /></g>
+        <g transform="translate(100,238) rotate(38) scale(-1,1)"><path fill="url(#leafGradB)" d="M0,0 C20,-8 30,-28 16,-46 C6,-32 -4,-14 0,0 Z" /></g>
+        <g transform="translate(100,292) rotate(-26)"><path fill="url(#leafGradB)" d="M0,0 C16,-6 24,-22 13,-36 C5,-25 -3,-11 0,0 Z" /></g>
+        <g transform="translate(100,292) rotate(26) scale(-1,1)"><path fill="url(#leafGradA)" d="M0,0 C16,-6 24,-22 13,-36 C5,-25 -3,-11 0,0 Z" /></g>
+
+        <g transform="translate(100,125)">
           <circle r="78" fill="url(#petalPeonyMid)" opacity=".9" />
 
           @for (angle of peonyOuterPetals; track $index) {
@@ -98,19 +113,24 @@
         </g>
       </symbol>
 
-      <!-- Peonía en capullo: forma cerrada con costuras de pétalo y sépalos -->
-      <symbol id="flowerPeonyBud" viewBox="0 0 200 200">
+      <!-- Peonía en capullo: forma cerrada con costuras de pétalo, sépalos y tallo propio -->
+      <symbol id="flowerPeonyBud" viewBox="0 0 200 340">
+        <path d="M100 185C94 225 106 275 100 335" fill="none" stroke="#2f5a2e" stroke-width="6" stroke-linecap="round" />
+        <g transform="translate(100,232) rotate(-32)"><path fill="url(#leafGradA)" d="M0,0 C16,-7 24,-24 13,-38 C5,-27 -3,-12 0,0 Z" /></g>
+        <g transform="translate(100,232) rotate(32) scale(-1,1)"><path fill="url(#leafGradB)" d="M0,0 C16,-7 24,-24 13,-38 C5,-27 -3,-12 0,0 Z" /></g>
+
         <path fill="url(#petalPeonyMid)" stroke="#a5690e" stroke-opacity=".3" stroke-width="1.4"
-              d="M100 30C130 30 150 62 144 96C140 128 122 152 100 160C78 152 60 128 56 96C50 62 70 30 100 30Z" />
-        <path d="M100 34C100 70 100 128 100 158" fill="none" stroke="#c68a16" stroke-opacity=".4" stroke-width="2" />
-        <path d="M74 52C82 84 86 128 92 156" fill="none" stroke="#c68a16" stroke-opacity=".3" stroke-width="1.6" />
-        <path d="M126 52C118 84 114 128 108 156" fill="none" stroke="#c68a16" stroke-opacity=".3" stroke-width="1.6" />
-        <path fill="url(#leafGradA)" d="M100 154C84 148 74 162 78 182C90 178 100 168 100 154Z" />
-        <path fill="url(#leafGradB)" d="M100 154C116 148 126 162 122 182C110 178 100 168 100 154Z" />
+              d="M100 55C130 55 150 87 144 121C140 153 122 177 100 185C78 177 60 153 56 121C50 87 70 55 100 55Z" />
+        <path d="M100 59C100 95 100 153 100 183" fill="none" stroke="#c68a16" stroke-opacity=".4" stroke-width="2" />
+        <path d="M74 77C82 109 86 153 92 181" fill="none" stroke="#c68a16" stroke-opacity=".3" stroke-width="1.6" />
+        <path d="M126 77C118 109 114 153 108 181" fill="none" stroke="#c68a16" stroke-opacity=".3" stroke-width="1.6" />
+        <path fill="url(#leafGradA)" d="M100 179C84 173 74 187 78 207C90 203 100 193 100 179Z" />
+        <path fill="url(#leafGradB)" d="M100 179C116 173 126 187 122 207C110 203 100 193 100 179Z" />
       </symbol>
 
-      <!-- Hoja: silueta puntiaguda con nervadura central y venas laterales -->
-      <symbol id="leafBlade" viewBox="0 0 120 200">
+      <!-- Hoja suelta: silueta puntiaguda con nervadura central, tallo corto -->
+      <symbol id="leafBlade" viewBox="0 0 120 280">
+        <path d="M60 190C58 220 62 250 60 275" fill="none" stroke="#2f5a2e" stroke-width="5" stroke-linecap="round" />
         <path fill="url(#leafGradA)" stroke="#16301a" stroke-opacity=".3" stroke-width="1.5"
               d="M60 8C92 40 104 90 82 138C70 164 60 188 60 196C60 188 50 164 38 138C16 90 28 40 60 8Z" />
         <path d="M60 20C60 66 60 140 60 190" fill="none" stroke="#16301a" stroke-opacity=".4" stroke-width="2" />
