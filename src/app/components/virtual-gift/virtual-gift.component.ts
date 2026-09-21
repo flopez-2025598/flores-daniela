@@ -1,164 +1,95 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 
-export interface Petal {
-  id: number;
-  left: number; // % horizontal position
-  delay: number; // animation delay in seconds
-  duration: number; // fall duration in seconds
-  size: number; // width in pixels
-  rotation: number; // initial tilt
-  swayDuration: number; // sway oscillation period in seconds
-  opacity: number;
-  type: 'peony' | 'hydrangea';
-}
+type Stage = 'idle' | 'box' | 'glow' | 'open' | 'letter';
+type FlowerKind = 'peony' | 'hydrangea';
 
-export interface Sparkle {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  delay: number;
-}
+interface Particle { id: number; x: number; y: number; size: number; delay: number; duration: number; }
+interface Flower { id: number; kind: FlowerKind; x: number; scale: number; tilt: number; delay: number; tone: number; }
 
 @Component({
   selector: 'app-virtual-gift',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './virtual-gift.component.html',
   styleUrls: ['./virtual-gift.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VirtualGiftComponent implements OnInit {
-  isOpened = false;
-  petals: Petal[] = [];
-  burstPetals: Petal[] = [];
-  sparkles: Sparkle[] = [];
+  readonly stage = signal<Stage>('idle');
+  readonly menuOpen = signal(false);
+  readonly activeFlower = signal<number | null>(null);
+  readonly isMobile = signal(true);
+  readonly stars = signal<Particle[]>([]);
+  readonly fireflies = signal<Particle[]>([]);
+  readonly sparks = signal<Particle[]>([]);
+  readonly flowers = signal<Flower[]>([]);
+  readonly modalOpen = computed(() => this.stage() === 'letter');
 
-  readonly totalBackgroundPetals = 35;
-  readonly totalBurstPetals = 20;
+  readonly message = [
+    '¿Sabes? Hice esto porque quería darte un detalle. Hoy todos andan con sus flores amarillas y no quiero que seas espectadora. Como no podemos vernos, te hice esto. No sé si te guste, pero lo hice con mucho cariño para ti.',
+    'Quiero llenarte de detalles, y este es uno de ellos. Si sigues a mi lado, te acostumbrarás a recibirlos. Quiero hacer las cosas bien contigo, pero no depende solo de mí: depende de los dos. Tenemos que tener la responsabilidad y la madurez para que esta relación funcione.',
+    'Como te decía, debemos ir conociéndonos, porque nada funciona de un día para otro. Todo lo bueno sabe esperar. No quiero cometer los errores que he hecho antes contigo. En verdad, me gustaría que todo fuera contigo, pero no depende solo de mí ni de ti; depende de los dos y del tiempo.'
+  ];
 
   ngOnInit(): void {
-    this.generateBackgroundPetals();
-    this.generateSparkles();
+    const mobile = typeof window === 'undefined' || window.matchMedia('(max-width: 767px)').matches;
+    this.isMobile.set(mobile);
+    this.stars.set(this.makeParticles(mobile ? 40 : 90, 3, 10, 3, 9));
+    this.fireflies.set(this.makeParticles(mobile ? 6 : 15, 4, 9, 4, 8, 48));
+    const count = mobile ? 6 : 12;
+    this.flowers.set(Array.from({ length: count }, (_, id) => ({
+      id, kind: id % 2 ? 'hydrangea' : 'peony',
+      x: count === 1 ? 50 : 3 + (id * 94) / (count - 1),
+      scale: .7 + ((id * 17) % 45) / 100, tilt: -9 + ((id * 13) % 18),
+      delay: -(id % 5) * .65, tone: id % 3
+    })));
   }
 
-  /**
-   * Alterna o activa la apertura de la caja de regalo
-   */
+  showBox(): void {
+    if (this.stage() !== 'idle') return;
+    this.stage.set('box');
+  }
+
+  touchFlower(id: number): void {
+    this.activeFlower.set(id);
+    if (this.stage() === 'idle') this.showBox();
+    window.setTimeout(() => this.activeFlower.set(null), 650);
+  }
+
   openGift(): void {
-    if (!this.isOpened) {
-      this.isOpened = true;
-      this.generateBurstPetals();
-      this.playOpeningChime();
-    }
+    if (this.stage() !== 'box') return;
+    this.stage.set('glow');
+    this.sparks.set(this.makeParticles(this.isMobile() ? 16 : 28, 4, 11, 1.2, 2.4, 40));
+    window.setTimeout(() => this.stage.set('open'), 480);
+    window.setTimeout(() => this.stage.set('letter'), 1050);
+    this.playChime();
   }
 
-  /**
-   * Reinicia la animación para volver a cerrar la caja
-   */
-  resetGift(event?: MouseEvent): void {
-    if (event) {
-      event.stopPropagation();
-    }
-    this.isOpened = false;
-    this.burstPetals = [];
+  closeLetter(): void {
+    this.stage.set('idle');
+    this.sparks.set([]);
   }
 
-  /**
-   * Genera los pétalos de fondo con propiedades aleatorias para un movimiento natural
-   */
-  private generateBackgroundPetals(): void {
-    const list: Petal[] = [];
-    for (let i = 0; i < this.totalBackgroundPetals; i++) {
-      list.push({
-        id: i,
-        left: Math.random() * 98, // %
-        delay: -(Math.random() * 12), // desfase negativo para que ya estén cayendo al cargar
-        duration: 8 + Math.random() * 7, // 8s a 15s de caída suave
-        size: 14 + Math.random() * 16, // 14px a 30px
-        rotation: Math.floor(Math.random() * 360),
-        swayDuration: 3 + Math.random() * 3, // 3s a 6s
-        opacity: 0.5 + Math.random() * 0.45,
-        type: i % 3 === 0 ? 'hydrangea' : 'peony'
-      });
-    }
-    this.petals = list;
+  toggleMenu(): void { this.menuOpen.update(open => !open); }
+
+  private makeParticles(count: number, min: number, max: number, minDuration: number, maxDuration: number, minY = 4): Particle[] {
+    return Array.from({ length: count }, (_, id) => ({
+      id, x: Math.random() * 100, y: minY + Math.random() * (92 - minY),
+      size: min + Math.random() * (max - min), delay: -(Math.random() * maxDuration),
+      duration: minDuration + Math.random() * (maxDuration - minDuration)
+    }));
   }
 
-  /**
-   * Genera pétalos que brotan explosivamente desde la caja al abrirse
-   */
-  private generateBurstPetals(): void {
-    const burst: Petal[] = [];
-    for (let i = 0; i < this.totalBurstPetals; i++) {
-      burst.push({
-        id: 1000 + i,
-        left: 40 + (Math.random() * 20 - 10), // centrado alrededor de la caja
-        delay: 0.2 + Math.random() * 0.6,
-        duration: 5 + Math.random() * 4,
-        size: 16 + Math.random() * 18,
-        rotation: Math.floor(Math.random() * 360),
-        swayDuration: 2.5 + Math.random() * 2,
-        opacity: 0.85 + Math.random() * 0.15,
-        type: i % 2 === 0 ? 'peony' : 'hydrangea'
-      });
-    }
-    this.burstPetals = burst;
-  }
-
-  /**
-   * Genera destellos luminosos mágicos alrededor de la caja
-   */
-  private generateSparkles(): void {
-    const items: Sparkle[] = [];
-    for (let i = 0; i < 12; i++) {
-      items.push({
-        id: i,
-        x: 10 + Math.random() * 80,
-        y: 10 + Math.random() * 80,
-        size: 8 + Math.random() * 16,
-        delay: Math.random() * 3
-      });
-    }
-    this.sparkles = items;
-  }
-
-  /**
-   * Efecto sonoro sutil y agradable sintetizado con Web Audio API (sin dependencias de archivos externos)
-   */
-  private playOpeningChime(): void {
+  private playChime(): void {
     try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      if (!AudioCtx) return;
-      
-      const ctx = new AudioCtx();
-      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // Do5, Mi5, Sol5, Do6, Mi6 (acorde brillante)
-
-      notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-
-        const startTime = ctx.currentTime + idx * 0.12;
-        gain.gain.setValueAtTime(0, startTime);
-        gain.gain.linearRampToValueAtTime(0.12, startTime + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 1.2);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(startTime);
-        osc.stop(startTime + 1.3);
+      const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      [659.25, 783.99, 1046.5].forEach((frequency, index) => {
+        const oscillator = ctx.createOscillator(), gain = ctx.createGain(), start = ctx.currentTime + index * .11;
+        oscillator.type = 'sine'; oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(.0001, start); gain.gain.exponentialRampToValueAtTime(.08, start + .03); gain.gain.exponentialRampToValueAtTime(.0001, start + 1.1);
+        oscillator.connect(gain); gain.connect(ctx.destination); oscillator.start(start); oscillator.stop(start + 1.15);
       });
-    } catch {
-      // Ignorar silenciosamente si el navegador bloquea audio sin interacción directa
-    }
-  }
-
-  trackByPetalId(_index: number, item: Petal): number {
-    return item.id;
+    } catch { /* Audio is optional. */ }
   }
 }
