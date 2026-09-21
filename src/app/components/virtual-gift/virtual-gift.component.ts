@@ -329,24 +329,24 @@ export class VirtualGiftComponent implements OnInit {
   }
 
   private makeGarden(): GardenFlower[] {
-    // Composición a mano — plantas GRANDES con tallo y hojas propias, bien
-    // separadas entre sí (no una alfombra apretada), como un jardín visto de
-    // cerca. Las hortensias 'front' quedan cerca de los bordes para que solo
-    // rocen el costado de la caja de regalo, no su centro; las peonías van en
-    // 'back' (detrás de la caja) para enmarcarla sin taparla.
+    // Composición inspirada en la referencia: una masa baja y exuberante de
+    // hortensias amarillas, con peonías abiertas saliendo entre ellas. Se
+    // solapan intencionalmente para que el borde inferior se sienta como un
+    // ramo real y denso, no como plantas aisladas.
     const layout: Array<[FlowerKind, number, FlowerLayer, number]> = [
       // kind         x%   layer    baseScale
-      ['leaf', 1, 'back', 1.1],
-      ['hydrangea', 10, 'front', 1.3],
-      ['peonyOpen', 21, 'back', 1.4],
-      ['leaf', 33, 'back', 0.9],
-      ['peonyBud', 40, 'back', 0.85],
-      ['peonyOpen', 50, 'back', 1.55],
-      ['peonyBud', 60, 'back', 0.85],
-      ['leaf', 68, 'back', 0.9],
-      ['peonyOpen', 79, 'back', 1.4],
-      ['hydrangea', 90, 'front', 1.3],
-      ['leaf', 99, 'back', 1.1]
+      ['leaf', 3, 'back', 1.25],
+      ['peonyOpen', 8, 'back', 1.52],
+      ['hydrangea', 19, 'front', 1.28],
+      ['peonyBud', 30, 'front', 1.08],
+      ['hydrangea', 36, 'front', 1.38],
+      ['peonyOpen', 48, 'back', 1.68],
+      ['hydrangea', 54, 'front', 1.48],
+      ['peonyBud', 65, 'front', 1.16],
+      ['hydrangea', 71, 'front', 1.36],
+      ['peonyOpen', 83, 'back', 1.55],
+      ['hydrangea', 90, 'front', 1.32],
+      ['leaf', 98, 'back', 1.24]
     ];
 
     return layout.map(([kind, xPct, layer, baseScale], i) => ({

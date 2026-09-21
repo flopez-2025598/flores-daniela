@@ -206,8 +206,8 @@
   position: relative;
   z-index: 5;
   margin-top: auto;
-  height: 46dvh;
-  min-height: 300px;
+  height: 40dvh;
+  min-height: 270px;
   overflow: visible;
 }
 
@@ -221,13 +221,14 @@
 .back-layer { z-index: 1; }
 .front-layer { z-index: 30; }
 
-// Plantas con tallo y hojas propias, ancladas al piso del jardín (bottom casi
-// fijo) y separadas entre sí — que se note cada flor, no una alfombra apretada.
+// Masa floral baja y superpuesta: reproduce el borde exuberante de la
+// referencia, donde las hortensias forman una base compacta y las peonías
+// sobresalen como flores protagonistas.
 .flower {
   position: absolute;
-  bottom: -1%;
-  width: 34%;
-  max-width: 172px;
+  bottom: -15%;
+  width: 39%;
+  max-width: 196px;
   aspect-ratio: 200 / 340;
   overflow: visible;
   transform: translateX(-50%) scale(var(--scale)) rotate(var(--rotate));
@@ -239,13 +240,24 @@
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
-.flower.hydrangea { width: 40%; max-width: 210px; }
-.flower.peony-open { width: 36%; max-width: 190px; }
-.flower.peony-bud { width: 20%; max-width: 104px; }
+.flower.hydrangea { width: 46%; max-width: 232px; }
+.flower.peony-open { width: 43%; max-width: 215px; }
+.flower.peony-bud { width: 25%; max-width: 124px; }
 .flower.leaf {
-  width: 17%;
-  max-width: 88px;
+  width: 21%;
+  max-width: 105px;
   aspect-ratio: 120 / 280;
+}
+
+// Los racimos delanteros tienen una luz cálida suave y las flores pequeñas
+// quedan hundidas entre hojas; el resultado evita una fila plana de iconos.
+.front-layer .flower {
+  filter:
+    drop-shadow(0 0 10px rgba(255, 215, 91, 0.18))
+    drop-shadow(0 12px 11px rgba(0, 0, 0, 0.42));
+}
+.front-layer .flower:nth-child(odd) {
+  transform-origin: 50% 100%;
 }
 
 @keyframes sway {
